@@ -13,4 +13,4 @@ jobs:
     - name: Build the Docker image
       run: |
         docker pull ymoisan/gdl-cuda11-2-miniconda-as-build2
-        docker run --gpus all -v `pwd`:/gdl --rm -it ymoisan/gdl-cuda11-2-miniconda-as-build2 /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train"
+        docker run --gpus all -v `pwd`:/gdl --rm ymoisan/gdl-cuda11-2-miniconda-as-build2 /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train"
