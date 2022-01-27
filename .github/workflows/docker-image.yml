@@ -13,4 +13,4 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build -t gdl -f Dockerfile .
-        docker run --gpus all -v `pwd`:/gdl --rm gdl /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference""
+        docker run --gpus all -v `pwd`:/gdl --rm gdl /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference"

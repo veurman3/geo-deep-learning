@@ -66,8 +66,7 @@ ARG GIT_TAG=develop
 
 RUN git clone "https://github.com/NRCan/geo-deep-learning.git" && \
     cd geo-deep-learning && \
-    git checkout ${GIT_HASH} && \
-    rm -rf .git data docs config example LICENSE README.md Dockerfile *.yml
+    git checkout ${GIT_HASH}
 
 COPY --chown=1000 --from=build /opt/conda/. $CONDA_DIR
 
