@@ -12,5 +12,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: |
-        docker pull ymoisan/gdl-cuda11-2-miniconda-as-build2
-        docker run --gpus all -v `pwd`:/gdl --rm ymoisan/gdl-cuda11-2-miniconda-as-build2 /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference"
+        docker build -t gdl -f Dockerfile .
+        docker run --gpus all -v `pwd`:/gdl --rm gdl /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference""
