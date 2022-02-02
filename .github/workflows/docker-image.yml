@@ -12,6 +12,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: |
-        mkdir logs
         sudo docker build -t gdl -f Dockerfile .
-        sudo docker run -v `pwd`:/gdl --rm gdl /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd /gdl && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference"
+        docker run --rm gdl:latest /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd geo-deep-learning && cd data && unzip massachusetts_buildings.zip && cd .. && mkdir logs && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference"
