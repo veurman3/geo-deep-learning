@@ -11,6 +11,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: |
-        sudo docker build -t gdl -f Dockerfile .
-        docker run --rm gdl:latest /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda activate geo_deep_env && cd geo-deep-learning && cd data && unzip massachusetts_buildings.zip && cd .. && mkdir logs && python GDL.py mode=sampling && python GDL.py mode=train && python GDL.py mode=inference"
+      run: sudo docker build -t gdl -f Dockerfile .
+    - name: test GDL's 3 major modes
+      run: >
+        docker run --rm gdl:latest /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh &&
+        conda activate geo_deep_env && cd geo-deep-learning && cd data && unzip massachusetts_buildings.zip &&
+        cd .. && mkdir logs &&
+        python GDL.py mode=sampling &&
+        python GDL.py mode=train &&
+        python GDL.py mode=inference"
