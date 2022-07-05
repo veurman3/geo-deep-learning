@@ -139,6 +139,24 @@ class Test_AOI(object):
             aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'])
             assert aoi.bounds_iou == 0
 
+    def test_write_multiband_from_single_band(self) -> None:
+        extract_archive(src="tests/data/spacenet.zip")
+        data = read_csv("tests/sampling/sampling_segmentation_binary-singleband_ci.csv")
+        for row in data:
+            aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], raster_bands_request=['R', 'G', 'B'],
+                      write_multiband=True, root_dir="data")
+            assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
+            #assert aoi.write_multiband == True
+
+    def test_write_multiband_from_single_band_url(self) -> None:
+        extract_archive(src="tests/data/spacenet.zip")
+        data = read_csv("tests/sampling/sampling_segmentation_binary-singleband-url_ci.csv")
+        for row in data:
+            aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], raster_bands_request=['R', 'G', 'B'],
+                      write_multiband=True, root_dir="data", download_data=True)
+            assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
+            assert aoi.download_data == True
+
     def test_raster_stats_from_stac(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
         data = read_csv("tests/sampling/sampling_segmentation_binary-stac_ci.csv")
