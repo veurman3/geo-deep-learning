@@ -460,6 +460,9 @@ class AOI(object):
     def write_multiband_from_singleband_rasters_as_vrt(self, out_dir: Union[str, Path] = None):
         """Writes a multiband raster to file from a pre-built VRT. For debugging and demoing"""
         out_dir = self.root_dir #if out_dir is not None else Path(out_dir)
+        if out_dir is None:
+            logging.error(f"There is no path for the output, root_dir shoudn't be None")
+            return
         if not self.raster.driver == 'VRT':
             logging.error(f"To write a multi-band raster from single-band files, a VRT must be provided."
                           f"\nGot {self.raster.meta}")

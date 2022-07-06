@@ -1,4 +1,5 @@
 import multiprocessing
+import os.path
 from pathlib import Path
 
 import geopandas as gpd
@@ -46,7 +47,12 @@ class Test_AOI(object):
                 raster=row['tif'], label=row['gpkg'], split=row['split'],
                 raster_bands_request=['R'], download_data=True, root_dir="data"
             )
-            # TODO assert actual == expected
+            assert aoi.download_data == True
+            assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif").is_file()
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif"):
+            s = ""
+            #os.close("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
+            #os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
 
     def test_missing_label(self):
         extract_archive(src="tests/data/spacenet.zip")
@@ -156,6 +162,12 @@ class Test_AOI(object):
                       write_multiband=True, root_dir="data", download_data=True)
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
             assert aoi.download_data == True
+
+    def test_download_true_not_url(self) -> None:
+        extract_archive(src="tests/data/spacenet.zip")
+        data = read_csv("tests/sampling/sampling_segmentation_binary-singleband_ci.csv")
+        for row in data:
+            aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], download_data=True, raster_bands_request=['R', 'G', 'B'])
 
     def test_raster_stats_from_stac(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
