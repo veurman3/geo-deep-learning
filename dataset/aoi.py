@@ -309,6 +309,7 @@ class AOI(object):
         if self.for_multiprocessing:
             self.raster = None
         logging.debug(self)
+        self.raster.close()
 
     @classmethod
     def from_dict(cls,
@@ -455,6 +456,7 @@ class AOI(object):
             "statistics": {"minimum": mean_minimum, "maximum": mean_maximum, "mean": mean_mean,
                            "median": mean_median, "std": mean_std},
             "histogram": {"buckets": mean_hist}}
+        self.raster.close()
         return stats
 
     def write_multiband_from_singleband_rasters_as_vrt(self, out_dir: Union[str, Path] = None):

@@ -45,14 +45,12 @@ class Test_AOI(object):
         for row in data:
             aoi = AOI(
                 raster=row['tif'], label=row['gpkg'], split=row['split'],
-                raster_bands_request=['R'], download_data=True, root_dir="data"
+               raster_bands_request=['R'], download_data=True, root_dir="data"
             )
             assert aoi.download_data == True
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif").is_file()
         if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif"):
-            s = ""
-            #os.close("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
-            #os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
 
     def test_missing_label(self):
         extract_archive(src="tests/data/spacenet.zip")
@@ -127,6 +125,8 @@ class Test_AOI(object):
             aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], download_data= True, root_dir="data")
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-N.tif").is_file()
             assert aoi.download_data == True
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-N.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-N.tif")
 
     def test_stac_input_missing_band(self):
         """Tests singleband input imagery from stac item"""
@@ -152,7 +152,8 @@ class Test_AOI(object):
             aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], raster_bands_request=['R', 'G', 'B'],
                       write_multiband=True, root_dir="data")
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
-            #assert aoi.write_multiband == True
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif")
 
     def test_write_multiband_from_single_band_url(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
@@ -162,6 +163,14 @@ class Test_AOI(object):
                       write_multiband=True, root_dir="data", download_data=True)
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
             assert aoi.download_data == True
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif")
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-G.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-G.tif")
+        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-B.tif"):
+            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-B.tif")
 
     def test_download_true_not_url(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
@@ -238,3 +247,4 @@ def map_wrapper(x):
 def aoi_read_raster(aoi: AOI):
     aoi.raster_read()
     return aoi.raster.meta
+
