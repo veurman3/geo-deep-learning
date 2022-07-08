@@ -303,13 +303,15 @@ class AOI(object):
 
         self.raster_stats = self.calc_raster_stats() if raster_stats else None
 
+        self.raster_np = self.raster.read()
+        self.raster.close()
+
         if not isinstance(for_multiprocessing, bool):
             raise ValueError(f"\n\"for_multiprocessing\" should be a boolean.\nGot {for_multiprocessing}.")
         self.for_multiprocessing = for_multiprocessing
         if self.for_multiprocessing:
             self.raster = None
         logging.debug(self)
-        self.raster.close()
 
     @classmethod
     def from_dict(cls,
@@ -435,7 +437,7 @@ class AOI(object):
             for band in self.raster_stac_item.bands:
                 stats[band.common_name] = stac_stats[band.name]
         except (AttributeError, KeyError):
-            self.raster_np = self.raster.read()
+            #self.raster_np = self.raster.read()
             for index, band in enumerate(stats.keys()):
                 stats[band] = {"statistics": {}, "histogram": {}}
                 stats[band]["statistics"]["minimum"] = self.raster_np[index].min()
