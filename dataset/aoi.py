@@ -215,7 +215,7 @@ class AOI(object):
             validate_num_bands(raster_path=self.raster, num_bands=raster_num_bands_expected)
 
         if self.raster_parsed and write_multiband:
-            self.write_multiband_from_singleband_rasters_as_vrt()
+            self.write_multiband_from_singleband_rasters_as_vrt(out_dir=self.root_dir)
 
         # Check label data
         if label:
@@ -303,9 +303,6 @@ class AOI(object):
 
         self.raster_stats = self.calc_raster_stats() if raster_stats else None
 
-        self.raster_np = self.raster.read()
-        self.raster.close()
-
         if not isinstance(for_multiprocessing, bool):
             raise ValueError(f"\n\"for_multiprocessing\" should be a boolean.\nGot {for_multiprocessing}.")
         self.for_multiprocessing = for_multiprocessing
@@ -365,7 +362,7 @@ class AOI(object):
             if virtual:
                 self.raster_multiband = stack_singlebands_vrt(self.raster_parsed)
             else:
-                self.raster_multiband = self.write_multiband_from_singleband_rasters_as_vrt()
+                self.raster_multiband = self.write_multiband_from_singleband_rasters_as_vrt(out_dir=self.root_dir)
         else:
             self.raster_multiband = self.raster_parsed[0]
 
@@ -437,7 +434,7 @@ class AOI(object):
             for band in self.raster_stac_item.bands:
                 stats[band.common_name] = stac_stats[band.name]
         except (AttributeError, KeyError):
-            #self.raster_np = self.raster.read()
+            self.raster_np = self.raster.read()
             for index, band in enumerate(stats.keys()):
                 stats[band] = {"statistics": {}, "histogram": {}}
                 stats[band]["statistics"]["minimum"] = self.raster_np[index].min()
@@ -461,12 +458,8 @@ class AOI(object):
         self.raster.close()
         return stats
 
-    def write_multiband_from_singleband_rasters_as_vrt(self, out_dir: Union[str, Path] = None):
+    def write_multiband_from_singleband_rasters_as_vrt(self, out_dir: Union[str, Path]):
         """Writes a multiband raster to file from a pre-built VRT. For debugging and demoing"""
-        out_dir = self.root_dir #if out_dir is not None else Path(out_dir)
-        if out_dir is None:
-            logging.error(f"There is no path for the output, root_dir shoudn't be None")
-            return
         if not self.raster.driver == 'VRT':
             logging.error(f"To write a multi-band raster from single-band files, a VRT must be provided."
                           f"\nGot {self.raster.meta}")

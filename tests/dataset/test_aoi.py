@@ -152,25 +152,19 @@ class Test_AOI(object):
             aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], raster_bands_request=['R', 'G', 'B'],
                       write_multiband=True, root_dir="data")
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
-        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif"):
+            aoi.raster.close()
             os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif")
+            break
 
     def test_write_multiband_from_single_band_url(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
         data = read_csv("tests/sampling/sampling_segmentation_binary-singleband-url_ci.csv")
         for row in data:
             aoi = AOI(raster=row['tif'], label=row['gpkg'], split=row['split'], raster_bands_request=['R', 'G', 'B'],
-                      write_multiband=True, root_dir="data", download_data=True)
+                      write_multiband=True, root_dir="data")
             assert Path("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif").is_file()
-            assert aoi.download_data == True
-        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif"):
+            aoi.raster.close()
             os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-RGB.tif")
-        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif"):
-            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-R.tif")
-        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-G.tif"):
-            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-G.tif")
-        if os.path.exists("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-B.tif"):
-            os.remove("data/SpaceNet_AOI_2_Las_Vegas-056155973080_01_P001-WV03-B.tif")
 
     def test_download_true_not_url(self) -> None:
         extract_archive(src="tests/data/spacenet.zip")
